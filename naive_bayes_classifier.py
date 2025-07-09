@@ -40,9 +40,12 @@ class NaiveBayesClassifier:
                 value = row_list[i]
                 self.x[label][feature][value] += 1
 
-
-
-
-
-
-
+    def model_training(self):
+        for label in self.x:
+            for feature in self.x[label]:
+                k = len(self.x[label][feature])
+                for value in self.x[label][feature]:
+                    count = self.x[label][feature][value]
+                    prob = (count + 1) / (self.p[label] + k)
+                    self.x[label][feature][value] = prob
+            self.p[label] /= self.n_samples
