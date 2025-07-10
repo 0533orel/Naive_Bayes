@@ -41,6 +41,9 @@ class NaiveBayesClassifier:
                 self.x[label][feature][value] += 1
 
     def model_training(self):
+        if not self.x:
+            raise ValueError("there is no data in dictionary")
+
         for label in self.x:
             for feature in self.x[label]:
                 k = len(self.x[label][feature])
@@ -49,3 +52,15 @@ class NaiveBayesClassifier:
                     prob = (count + 1) / (self.p[label] + k)
                     self.x[label][feature][value] = prob
             self.p[label] /= self.n_samples
+
+    def predict(self, sample_dict):
+        if not self.x:
+            raise ValueError("there is no data in dictionary")
+
+        prob = {}
+        for label in self.p:
+            p = self.p[label]
+            for feature, value in sample_dict.items():
+                p *= self.x[label][feature].get(value, 0)
+            prob[label] = p
+        return max(prob, key=prob.get)
