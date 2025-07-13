@@ -25,6 +25,16 @@ class NaiveBayesClassifier:
         self.__n_samples = 0
 
     @property
+    def df(self):
+        """
+        Returns the cleaned DataFrame.
+
+        Returns:
+            pd.DataFrame: The preprocessed data.
+        """
+        return self.__df
+
+    @property
     def x(self):
         """
         Returns the conditional probabilities dictionary.
