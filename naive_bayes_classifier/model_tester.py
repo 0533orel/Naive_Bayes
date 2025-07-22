@@ -1,4 +1,4 @@
-from naive_bayes_classifier import NaiveBayesClassifier
+from naive_bayes_classifier.naive_bayes_classifier import NaiveBayesClassifier
 
 class ModelTester:
     """

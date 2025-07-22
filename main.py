@@ -1,4 +1,4 @@
-from console_UI import ConsoleUI
+from console_ui.console_ui import ConsoleUI
 
 """
 Main entry point for running the console-based Naive Bayes classifier program.
