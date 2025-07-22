@@ -1,17 +1,10 @@
-from console_ui.console_ui import ConsoleUI
+from controller.controller import ControllerApi
+from data_loader.csv_data_loader import CsvDataLoader
+from naive_bayes_classifier.naive_bayes_classifier import NaiveBayesClassifier
 
-"""
-Main entry point for running the console-based Naive Bayes classifier program.
+loader = CsvDataLoader("data/Buy_Computer.csv")
+model = NaiveBayesClassifier(loader.df)
+model.model_training()
 
-This script initializes the ConsoleUI and starts the interactive menu loop.
-
-Usage:
-    Run this file directly to start the program.
-
-Example:
-    $ python main.py
-"""
-
-if __name__ == "__main__":
-    ui = ConsoleUI()
-    ui.run()
+controller = ControllerApi(model)
+app = controller.app
