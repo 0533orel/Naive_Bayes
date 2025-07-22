@@ -1,6 +1,6 @@
-from csv_data_loader import CsvDataLoader
-from model_tester import ModelTester
-from naive_bayes_classifier import NaiveBayesClassifier
+from data_loader.csv_data_loader import CsvDataLoader
+from naive_bayes_classifier.model_tester import ModelTester
+from naive_bayes_classifier.naive_bayes_classifier import NaiveBayesClassifier
 
 
 class ConsoleUI:
