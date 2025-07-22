@@ -1,10 +1,12 @@
-from controller.controller import ControllerApi
-from data_loader.csv_data_loader import CsvDataLoader
-from naive_bayes_classifier.naive_bayes_classifier import NaiveBayesClassifier
+from api.api_controller import ApiController
+from data_loader.cleaner import Cleaner
+from data_loader.loader import LoadData
+from model.naive_bayes_classifier import NaiveBayesClassifier
 
-loader = CsvDataLoader("data/Buy_Computer.csv")
-model = NaiveBayesClassifier(loader.df)
+loader = LoadData("data/Buy_Computer.csv")
+cleaner = Cleaner(loader.dataset, loader.target_col)
+model = NaiveBayesClassifier(cleaner.dataset)
 model.model_training()
 
-controller = ControllerApi(model)
+controller = ApiController(model)
 app = controller.app
