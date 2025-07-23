@@ -1,6 +1,7 @@
-from data_loader.csv_data_loader import CsvDataLoader
-from naive_bayes_classifier.model_tester import ModelTester
-from naive_bayes_classifier.naive_bayes_classifier import NaiveBayesClassifier
+from data_loader.loader import LoadData
+from data_loader.cleaner import Cleaner
+from model.model_tester import ModelTester
+from model.naive_bayes_classifier import NaiveBayesClassifier
 
 
 class ConsoleUI:
@@ -41,8 +42,9 @@ class ConsoleUI:
                 path = input("\nEnter path to CSV file: ")
                 target_col = input("\nEnter the name of the target column (leave empty to use the last column): ")
                 try:
-                    loader = CsvDataLoader(path, target_col)
-                    self.model = NaiveBayesClassifier(loader.df)
+                    data = LoadData(path, target_col)
+                    data = Cleaner(data.dataset, data.target_col)
+                    self.model = NaiveBayesClassifier(data.dataset)
                     self.model.model_training()
                     print("\nModel trained successfully.")
                 except Exception as e:
@@ -50,7 +52,7 @@ class ConsoleUI:
 
             elif choice == '2':
                 if self.model:
-                    tester = ModelTester(self.model.df)
+                    tester = ModelTester(self.model.dataset)
                     successful_answer = tester.test_model()
                     print(successful_answer)
                 else:
@@ -61,9 +63,9 @@ class ConsoleUI:
                     try:
                         print("\nEnter values for each feature:")
                         sample_dict = {}
-                        features = list(self.model.x.values())[0].keys()
+                        features = list(self.model.features.values())[0].keys()
                         for feature in features:
-                            possible_values = list(list(self.model.x.values())[0][feature].keys())
+                            possible_values = list(list(self.model.features.values())[0][feature].keys())
                             print(f"\nChoose a value for '{feature}':")
                             for i, val in enumerate(possible_values):
                                 print(f"{i + 1}. {val}")
@@ -78,7 +80,7 @@ class ConsoleUI:
                                 except ValueError:
                                     print("\nInvalid input. Please enter a number.")
                         result = self.model.predict(sample_dict)
-                        print(f"\nPredicted label: {result}")
+                        print(f"\nmodel answer: {result}")
                     except Exception as e:
                         print(f"\nError during classification: {e}")
                 else:

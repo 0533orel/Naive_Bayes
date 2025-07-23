@@ -9,7 +9,7 @@ Usage:
     Run this file directly to start the program.
 
 Example:
-    $ python main.py
+    $ python main_console.py
 """
 
 if __name__ == "__main__":
