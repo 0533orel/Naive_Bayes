@@ -30,7 +30,7 @@ class NaiveBayesClassifier:
         Returns the cleaned DataFrame.
 
         Returns:
-            pd.DataFrame: The preprocessed data.
+            dataset.DataFrame: The preprocessed data.
         """
         return self.__dataset
 
@@ -43,6 +43,16 @@ class NaiveBayesClassifier:
             dict: A nested dictionary of conditional probabilities.
         """
         return self.__features
+
+    @ property
+    def probs(self):
+        """
+        Returns the conditional probabilities dictionary.
+
+        Returns:
+            dict: A nested dictionary of conditional probabilities.
+        """
+        return self.__probs
 
     def get_dictionaries(self):
         """

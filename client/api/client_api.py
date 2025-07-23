@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-class ApiController:
+class ClientApi:
     def __init__(self, model):
         self.app = FastAPI()
         self.model = model
