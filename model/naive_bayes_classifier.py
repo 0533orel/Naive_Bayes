@@ -6,10 +6,10 @@ class NaiveBayesClassifier:
     A Naive Bayes classifier for categorical data using Laplace smoothing.
 
     Attributes:
-        __df (pd.DataFrame): The dataset used for training.
-        __p (dict): Prior probabilities for each class label.
-        __x (dict): Conditional probabilities for each feature value given a label.
-        __n_samples (int): Total number of training samples.
+        __dataset (pd.DataFrame): The dataset used for training.
+        __probs (dict): Prior probabilities for each class label.
+        __features (dict): Conditional probabilities for each feature value given a label.
+        __num_samples (int): Total number of training samples.
     """
 
     def __init__(self, data):
@@ -20,12 +20,12 @@ class NaiveBayesClassifier:
             data (pd.DataFrame): The dataset including features and target label.
         """
         self.__dataset = data
-        self.__label_prior_probs = {}
-        self.__feature_given_label_probs = {}
+        self.__probs = {}
+        self.__features = {}
         self.__num_samples = 0
 
     @property
-    def df(self):
+    def dataset(self):
         """
         Returns the cleaned DataFrame.
 
@@ -35,14 +35,14 @@ class NaiveBayesClassifier:
         return self.__dataset
 
     @property
-    def x(self):
+    def features(self):
         """
         Returns the conditional probabilities dictionary.
 
         Returns:
             dict: A nested dictionary of conditional probabilities.
         """
-        return self.__feature_given_label_probs
+        return self.__features
 
     def get_dictionaries(self):
         """
@@ -63,15 +63,15 @@ class NaiveBayesClassifier:
             features[col] = val_dic
 
         for lbl in label:
-            self.__feature_given_label_probs[lbl] = copy.deepcopy(features)
-            self.__label_prior_probs[lbl] = 0
+            self.__features[lbl] = copy.deepcopy(features)
+            self.__probs[lbl] = 0
 
     def fit(self):
         """
         Counts occurrences of feature values per label to prepare for training.
         Automatically calls `get_dictionaries()` if structures are not initialized.
         """
-        if not self.__feature_given_label_probs:
+        if not self.__features:
             self.get_dictionaries()
 
         self.__num_samples = len(self.__dataset)
@@ -80,28 +80,28 @@ class NaiveBayesClassifier:
         for _, row in self.__dataset.iterrows():
             row_list = row.values.tolist()
             label = row_list[-1]
-            self.__label_prior_probs[label] += 1
+            self.__probs[label] += 1
             for i in range(len(row_list) - 1):
                 feature = columns[i]
                 value = row_list[i]
-                self.__feature_given_label_probs[label][feature][value] += 1
+                self.__features[label][feature][value] += 1
 
     def model_training(self):
         """
         Applies Laplace smoothing and calculates conditional probabilities.
         Converts frequency counts into probabilities.
         """
-        if not self.__feature_given_label_probs:
+        if not self.__features:
             self.fit()
 
-        for label in self.__feature_given_label_probs:
-            for feature in self.__feature_given_label_probs[label]:
-                k = len(self.__feature_given_label_probs[label][feature])
-                for value in self.__feature_given_label_probs[label][feature]:
-                    count = self.__feature_given_label_probs[label][feature][value]
-                    prob = (count + 1) / (self.__label_prior_probs[label] + k)
-                    self.__feature_given_label_probs[label][feature][value] = prob
-            self.__label_prior_probs[label] /= self.__num_samples
+        for label in self.__features:
+            for feature in self.__features[label]:
+                k = len(self.__features[label][feature])
+                for value in self.__features[label][feature]:
+                    count = self.__features[label][feature][value]
+                    prob = (count + 1) / (self.__probs[label] + k)
+                    self.__features[label][feature][value] = prob
+            self.__probs[label] /= self.__num_samples
 
     def predict(self, sample_dict):
         """
@@ -116,13 +116,13 @@ class NaiveBayesClassifier:
         Raises:
             ValueError: If the model has not been trained yet.
         """
-        if not self.__feature_given_label_probs:
+        if not self.__features:
             raise ValueError("\nthere is no data in dictionary")
 
         prob = {}
-        for label in self.__label_prior_probs:
-            p = self.__label_prior_probs[label]
+        for label in self.__probs:
+            p = self.__probs[label]
             for feature, value in sample_dict.items():
-                p *= self.__feature_given_label_probs[label][feature].get(value, 0)
+                p *= self.__features[label][feature].get(value, 0)
             prob[label] = p
         return max(prob, key=prob.get)
