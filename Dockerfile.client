@@ -2,8 +2,15 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-COPY . .
+COPY requirements.txt .
 
 RUN pip install --no-cache-dir -r requirements.txt
+
+RUN mkdir -p app
+
+COPY app/__init__.py app/
+COPY app/client_api.py app/
+COPY app/classified.py app/
+COPY main_client.py .
 
 CMD ["uvicorn", "main_client:app", "--host", "0.0.0.0", "--port", "8000"]

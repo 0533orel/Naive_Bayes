@@ -1,7 +1,7 @@
 import requests
 
-from api.client_api import ClientApi
-from model.classified import Classified
+from app.client_api import ClientApi
+from app.classified import Classified
 
 response = requests.get("http://server:8000/model")
 data = response.json()

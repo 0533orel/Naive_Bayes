@@ -1,0 +1,23 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+COPY requirements.txt .
+
+RUN pip install --no-cache-dir -r requirements.txt
+
+RUN mkdir -p app
+
+COPY app/__init__.py app/
+COPY app/server_api.py app/
+COPY app/cleaner.py app/
+COPY app/loader.py app/
+COPY app/model_tester.py app/
+COPY app/naive_bayes_classifier.py app/
+COPY main_server.py .
+
+RUN mkdir -p data
+
+COPY data/Buy_Computer.csv data/
+
+CMD ["uvicorn", "main_server:app", "--host", "0.0.0.0", "--port", "8000"]
