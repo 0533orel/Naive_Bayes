@@ -1,7 +1,7 @@
-from data_loader.cleaner import Cleaner
-from data_loader.loader import LoadData
-from model.naive_bayes_classifier import NaiveBayesClassifier
-from api.server_api import ServerApi
+from app.cleaner import Cleaner
+from app.loader import LoadData
+from app.naive_bayes_classifier import NaiveBayesClassifier
+from app.server_api import ServerApi
 
 data = LoadData("data/Buy_Computer.csv")
 data = Cleaner(data.dataset, data.target_col)
